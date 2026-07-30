@@ -30,21 +30,39 @@ class payu_manager:
             
       @staticmethod
       def generate_hash( fields , KEY , SALT):
-            hash_string = (
-                  f"{KEY}|"
-                  f"{fields['txnid']}|"
-                  f"{fields['amount']}|"
-                  f"{fields['productinfo']}|"
-                  f"{fields['firstname']}|"
-                  f"{fields['email']}|"
-                  f"{fields.get('udf1', '')}|"
-                  f"{fields.get('udf2', '')}|"
-                  f"{fields.get('udf3', '')}|"
-                  f"{fields.get('udf4', '')}|"
-                  f"{fields.get('udf5', '')}||||||"
-                  f"{fields['si_details']}|"
-                  f"{SALT}"
-            )
+            if fields.get("si") == "1" :
+                  hash_string = (
+                        f"{KEY}|"
+                        f"{fields['txnid']}|"
+                        f"{fields['amount']}|"
+                        f"{fields['productinfo']}|"
+                        f"{fields['firstname']}|"
+                        f"{fields['email']}|"
+                        f"{fields.get('udf1', '')}|"
+                        f"{fields.get('udf2', '')}|"
+                        f"{fields.get('udf3', '')}|"
+                        f"{fields.get('udf4', '')}|"
+                        f"{fields.get('udf5', '')}||||||"
+                        f"{fields['si_details']}|"
+                        f"{SALT}"
+                  )
+                  
+            else:
+                  hash_string = (
+                        f"{KEY}|"
+                        f"{fields['txnid']}|"
+                        f"{fields['amount']}|"
+                        f"{fields['productinfo']}|"
+                        f"{fields['firstname']}|"
+                        f"{fields['email']}|"
+                        f"{fields.get('udf1', '')}|"
+                        f"{fields.get('udf2', '')}|"
+                        f"{fields.get('udf3', '')}|"
+                        f"{fields.get('udf4', '')}|"
+                        f"{fields.get('udf5', '')}||||||"
+                        # f"{fields['si_details']}|"
+                        f"{SALT}"
+                  )
 
             return hashlib.sha512(hash_string.encode()).hexdigest()
       
@@ -99,13 +117,13 @@ class payu_subscription(payu_manager):
       
       def generate_subscription_link_data( self, fields  ):
             copyofdata = deepcopy ( fields )
+            copyofdata.update( { "key" : self.MERCHANT_KEY})
             copyofdata.update( { "si_details" : self.si_details } )
             copyofdata.update( { "txnid" : generate_transaction_id() } )
             copyofdata.update( { "amount" : str(self.amount) } )
             copyofdata.update( { "productinfo" :  self.productinfo  } )
-            copyofdata.update( { "key" : self.MERCHANT_KEY } )
-            copyofdata.update({"surl": self.surl})
-            copyofdata.update({"furl": self.furl})
+            copyofdata.update( { "surl" : self.surl } )
+            copyofdata.update( { "furl" : self.furl } )
             fields_with_hash = self.generate_hash_self ( copyofdata )
             return fields_with_hash
       
