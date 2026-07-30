@@ -101,6 +101,7 @@ class payu_subscription(payu_manager):
             copyofdata.update( { "txnid" : generate_transaction_id() } )
             copyofdata.update( { "amount" : str(self.amount) } )
             copyofdata.update( { "productinfo" :  self.productinfo  } )
+            copyofdata.update( { "key" : self.MERCHANT_KEY } )
             fields_with_hash = self.generate_hash_self ( copyofdata )
             return fields_with_hash
       
