@@ -27,9 +27,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/its_me_abi/payu-pyapi"
-Repository = "https://github.com/its_me_abi/payu-pyapi"
-Issues = "https://github.com/its_me_abi/payu-pyapi/issues"
+Homepage = "https://github.com/its-me-abi/payu-pyapi"
+Repository = "https://github.com/its-me-abi/payu-pyapi"
+Issues = "https://github.com/its-me-abi/payu-pyapi/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=7.0.0"]
