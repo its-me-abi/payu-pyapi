@@ -1,6 +1,6 @@
 # payu-pyapi
 
-Python API for PayU subscription link generation and payment processing.
+Python API for PayU unofficial subscription link generation and payment processing.
 
 ## About
 
