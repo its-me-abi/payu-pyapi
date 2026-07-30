@@ -8,7 +8,8 @@ PAYU_TEST_URL = "https://test.payu.in/_payment"
 PAYU_SECURE_URL = "https://secure.payu.in/_payment"
 
 def generate_transaction_id():
-    return f"TXN-{datetime.now(timezone.utc):%Y%m%d%H%M%S}-{uuid.uuid4().hex[:12].upper()}"
+    return f"{datetime.now(timezone.utc):%Y%m%d%H%M%S}{uuid.uuid4().hex[:8].upper()}"
+
 
 class Error(Exception):
       pass
@@ -44,6 +45,7 @@ class payu_manager:
                   f"{fields['si_details']}|"
                   f"{SALT}"
             )
+
             return hashlib.sha512(hash_string.encode()).hexdigest()
       
       def generate_hash_self(self, fields):
@@ -65,14 +67,12 @@ class payu_subscription(payu_manager):
             PAYU_URL = kargs.get("PAYU_URL", "")
             super().__init__( *args, PAYU_URL = PAYU_URL )
             self.amount = kargs.get( "amount", 1 )
-            self.productinfo = kargs.get( "productinfo", "" )
-            self.firstname = kargs.get( "firstname", "" )
-            self.email = kargs.get( "email", "" )
+            self.productinfo = kargs.get( "productinfo", "sample product" )
             self.currency = kargs.get( "currency", "INR" )
             self.cycle = kargs.get( "cycle", "MONTHLY" )
             self.duration = kargs.get( "duration", 365 )
             self.dateobj = self.create_subscription_date( self.duration)
-            self.si_details = self.get_si_details(self.amount,self.dateobj ,currency = self.currency , cycle = self.cycle)
+            self.si_details = json.dumps(self.get_si_details(self.amount,self.dateobj ,currency = self.currency , cycle = self.cycle), separators=(',', ':'))
             
       @staticmethod
       def get_si_details( amount , date_obj ,currency = "INR", cycle = "MONTHLY" ):
@@ -99,8 +99,8 @@ class payu_subscription(payu_manager):
             copyofdata = deepcopy ( fields )
             copyofdata.update( { "si_details" : self.si_details } )
             copyofdata.update( { "txnid" : generate_transaction_id() } )
-            copyofdata.update( { "amount" : str ( self.amount) } )
-            copyofdata.update( { "productinfo" : str( self.productinfo ) } )
+            copyofdata.update( { "amount" : str(self.amount) } )
+            copyofdata.update( { "productinfo" :  self.productinfo  } )
             fields_with_hash = self.generate_hash_self ( copyofdata )
             return fields_with_hash
       
@@ -123,9 +123,7 @@ def get_test_data_json():
             "firstname": "raju",
             "email": "raju@localhost.localhost",
             "phone": "0000000000",
-            "surl": "https://localhost:3000/_/theme/payu_success.html",
-            "furl": "https://localhost:3000/_/theme/payu_fail.html",
-            "api_version": "7s",
+            "api_version": "7",
             "si": "1",
       }
       return fields
@@ -133,11 +131,12 @@ def get_test_data_json():
       
 if __name__ == "__main__":
       import os
+      
       MERCHANT_KEY = os.getenv("PAYU_KEY")
       SALT = os.getenv("PAYU_SALT")
       
       if not MERCHANT_KEY or not SALT:
             raise ValueError("PAYU_KEY and PAYU_SALT environment variables must be set, you can get them from PayU dashboard")
-      man = payu_test_man(MERCHANT_KEY, SALT , amount = 99 )
+      man = payu_test_man(MERCHANT_KEY, SALT )
       
-      print(json.dumps(man.generate_subscription_link_data(get_test_data_json())))
+      print( json.dumps(man.generate_subscription_link_data(get_test_data_json()),indent=4) )
