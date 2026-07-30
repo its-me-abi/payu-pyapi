@@ -62,17 +62,16 @@ class payu_manager:
             
 class payu_subscription(payu_manager):
       def __init__( self, *args, **kargs ):
-            super().__init__( *args, **kargs )
+            PAYU_URL = kargs.get("PAYU_URL", "")
+            super().__init__( *args, PAYU_URL = PAYU_URL )
             self.amount = kargs.get( "amount", 1 )
             self.productinfo = kargs.get( "productinfo", "" )
             self.firstname = kargs.get( "firstname", "" )
             self.email = kargs.get( "email", "" )
-            
             self.currency = kargs.get( "currency", "INR" )
             self.cycle = kargs.get( "cycle", "MONTHLY" )
             self.duration = kargs.get( "duration", 365 )
-            self.dateobj = self.create_subscription_date( self.duration )
-            
+            self.dateobj = self.create_subscription_date( self.duration)
             self.si_details = self.get_si_details(self.amount,self.dateobj ,currency = self.currency , cycle = self.cycle)
             
       @staticmethod
@@ -101,6 +100,7 @@ class payu_subscription(payu_manager):
             copyofdata.update( { "si_details" : self.si_details } )
             copyofdata.update( { "txnid" : generate_transaction_id() } )
             copyofdata.update( { "amount" : str ( self.amount) } )
+            copyofdata.update( { "productinfo" : str( self.productinfo ) } )
             fields_with_hash = self.generate_hash_self ( copyofdata )
             return fields_with_hash
       
@@ -123,10 +123,9 @@ def get_test_data_json():
             "firstname": "raju",
             "email": "raju@localhost.localhost",
             "phone": "0000000000",
-            "productinfo": "test product",
             "surl": "https://localhost:3000/_/theme/payu_success.html",
             "furl": "https://localhost:3000/_/theme/payu_fail.html",
-            "api_version": "7",
+            "api_version": "7s",
             "si": "1",
       }
       return fields
@@ -141,4 +140,4 @@ if __name__ == "__main__":
             raise ValueError("PAYU_KEY and PAYU_SALT environment variables must be set, you can get them from PayU dashboard")
       man = payu_test_man(MERCHANT_KEY, SALT , amount = 99 )
       
-      print(man.generate_subscription_link_data(get_test_data_json()))
+      print(json.dumps(man.generate_subscription_link_data(get_test_data_json())))
