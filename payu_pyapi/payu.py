@@ -90,7 +90,7 @@ class payu_subscription(payu_manager):
       
       @staticmethod
       def create_subscription_date( days  = 365 * 30 ):
-            start_date = datetime.today()
+            start_date = datetime.today()+timedelta(days=1)
             end_date = start_date + timedelta(days=days)
             return {
                   "paymentStartDate": start_date.strftime("%Y-%m-%d"),
@@ -142,6 +142,6 @@ if __name__ == "__main__":
       
       if not MERCHANT_KEY or not SALT:
             raise ValueError("PAYU_KEY and PAYU_SALT environment variables must be set, you can get them from PayU dashboard")
-      man = payu_test_man(MERCHANT_KEY, SALT ,surl="http://localhost/success",furl="http://localhost/failed")
+      man = payu_test_man(MERCHANT_KEY, SALT ,amount=99,surl="http://localhost/success",furl="http://localhost/failed")
       
       print( json.dumps(man.generate_subscription_link_data(get_test_data_json()),indent=4) )
