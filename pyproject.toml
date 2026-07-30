@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "payu-pyapi"
+version = "0.1.0"
+description = "Python API for PayU subscription link generation"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "AGPL-3.0"}
+authors = [
+    {name = "its me abi", email = "keralaboy@keralaboy.anonaddy.io"}
+]
+keywords = ["payu", "payment", "api", "subscription", "gateway"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/its_me_abi/payu-pyapi"
+Repository = "https://github.com/its_me_abi/payu-pyapi"
+Issues = "https://github.com/its_me_abi/payu-pyapi/issues"
+
+[project.optional-dependencies]
+test = ["pytest>=7.0.0"]
