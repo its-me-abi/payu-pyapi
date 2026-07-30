@@ -68,6 +68,8 @@ class payu_subscription(payu_manager):
             super().__init__( *args, PAYU_URL = PAYU_URL )
             self.amount = kargs.get( "amount", 1 )
             self.productinfo = kargs.get( "productinfo", "sample product" )
+            self.surl = kargs.get( "surl", "" )
+            self.furl = kargs.get( "furl", "" )
             self.currency = kargs.get( "currency", "INR" )
             self.cycle = kargs.get( "cycle", "MONTHLY" )
             self.duration = kargs.get( "duration", 365 )
@@ -102,6 +104,8 @@ class payu_subscription(payu_manager):
             copyofdata.update( { "amount" : str(self.amount) } )
             copyofdata.update( { "productinfo" :  self.productinfo  } )
             copyofdata.update( { "key" : self.MERCHANT_KEY } )
+            copyofdata.update({"surl": self.surl})
+            copyofdata.update({"furl": self.furl})
             fields_with_hash = self.generate_hash_self ( copyofdata )
             return fields_with_hash
       
@@ -138,6 +142,6 @@ if __name__ == "__main__":
       
       if not MERCHANT_KEY or not SALT:
             raise ValueError("PAYU_KEY and PAYU_SALT environment variables must be set, you can get them from PayU dashboard")
-      man = payu_test_man(MERCHANT_KEY, SALT )
+      man = payu_test_man(MERCHANT_KEY, SALT ,surl="http://localhost/success",furl="http://localhost/failed")
       
       print( json.dumps(man.generate_subscription_link_data(get_test_data_json()),indent=4) )
