@@ -1,15 +1,16 @@
 # payu-pyapi
 
-Python API for PayU unofficial subscription link generation and payment processing.
+Python API for PayU subscription data ( json with hash)  generation package. more features might be added in future.
+
+please note that this is a work in progress and may not be production ready.
 
 ## About
 
 payu-pyapi is a Python library that simplifies integration with PayU's payment gateway, specifically for subscription-based payments. It provides a clean, object-oriented interface to handle:
 
-- Subscription link generation with automatic hash calculation
+- Subscription json data generation with automatic hash calculation
 - Transaction ID generation
 - Subscription date management
-- Payment hash generation for secure transactions
 - Support for both test and production environments
 
 ## Purpose
@@ -17,7 +18,6 @@ payu-pyapi is a Python library that simplifies integration with PayU's payment g
 This library aims to:
 
 - **Simplify PayU Integration**: Remove the complexity of manual hash generation and field preparation
-- **Type-Safe API**: Provide structured classes for different PayU environments
 - **Subscription Management**: Handle recurring billing setup with ease
 - **Security**: Automate SHA512 hash generation for secure payment processing
 - **Flexibility**: Support custom billing cycles, currencies, and subscription durations
@@ -38,7 +38,7 @@ This library aims to:
 - **Transaction ID Generation**: Unique, timestamped transaction identifiers
 - **Flexible Configuration**: Customizable currency, duration, and billing intervals
 - **Error Handling**: Custom exceptions for clear error reporting
-- **Environment Variable Support**: Secure credential management
+
 
 ## Installation
 
@@ -59,6 +59,18 @@ manager = payu_test_man(MERCHANT_KEY, SALT, amount=99)
 
 # For production environment
 manager = payu_production_man(MERCHANT_KEY, SALT, amount=99)
+fields = {
+            "firstname": "raju",
+            "email": "raju@localhost.localhost",
+            "phone": "0000000000",
+            "surl": "https://localhost:3000/_/theme/payu_success.html",
+            "furl": "https://localhost:3000/_/theme/payu_fail.html",
+            "api_version": "7s",
+            "si": "1",
+      }
+json_with_hash = manager.generate_subscription_link_data(fields)
+print(json_with_hash)
+
 ```
 
 ## API Usage
