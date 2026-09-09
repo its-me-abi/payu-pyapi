@@ -12,7 +12,7 @@ payu-pyapi is a Python library that simplifies integration with PayU's payment g
 - Transaction ID generation
 - Subscription date management
 - Support for both test and production environments
-<img width="1536" height="1024" alt="PayU Payment Flow Sequence Diagram(1)" src="https://github.com/user-attachments/assets/87cc738f-0552-4d4b-9ba4-265a574a50d4" />
+
 
 ## Purpose
 
