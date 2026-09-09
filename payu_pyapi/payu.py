@@ -10,19 +10,18 @@ PAYU_SECURE_URL = "https://secure.payu.in/_payment"
 def generate_transaction_id():
     return f"{datetime.now(timezone.utc):%Y%m%d%H%M%S}{uuid.uuid4().hex[:8].upper()}"
 
-
 class Error(Exception):
       pass
 
 class payu_manager:
       " python api for payu subscription link generating"
-      def __init__(self, MERCHANT_KEY, SALT,PAYU_URL=""):
+      def __init__(self, MERCHANT_KEY, SALT, PAYU_URL = "" ):
             
             if not MERCHANT_KEY  or  not SALT:
-                  raise Error("you should provide key and salt to payu api , https://payu.in/business")
+                  raise Error( "you should provide key and salt to payu api , https://payu.in/business" )
             
             if not isinstance(MERCHANT_KEY,str) or not isinstance(SALT,str):
-                  raise Error("key and salt should be strings")
+                  raise Error( "key and salt should be strings" )
             
             self.SALT: str = SALT
             self.MERCHANT_KEY: str = MERCHANT_KEY
@@ -30,45 +29,27 @@ class payu_manager:
             
       @staticmethod
       def generate_hash( fields , KEY , SALT):
+            hash_string = (
+                  f"{KEY}|"
+                  f"{fields['txnid']}|"
+                  f"{fields['amount']}|"
+                  f"{fields['productinfo']}|"
+                  f"{fields['firstname']}|"
+                  f"{fields['email']}|"
+                  f"{fields.get('udf1', '')}|"
+                  f"{fields.get('udf2', '')}|"
+                  f"{fields.get('udf3', '')}|"
+                  f"{fields.get('udf4', '')}|"
+                  f"{fields.get('udf5', '')}||||||"
+                  )
+            
             if fields.get("si") == "1" :
-                  hash_string = (
-                        f"{KEY}|"
-                        f"{fields['txnid']}|"
-                        f"{fields['amount']}|"
-                        f"{fields['productinfo']}|"
-                        f"{fields['firstname']}|"
-                        f"{fields['email']}|"
-                        f"{fields.get('udf1', '')}|"
-                        f"{fields.get('udf2', '')}|"
-                        f"{fields.get('udf3', '')}|"
-                        f"{fields.get('udf4', '')}|"
-                        f"{fields.get('udf5', '')}||||||"
-                        f"{fields['si_details']}|"
-                        f"{SALT}"
-                  )
-                  
-            else:
-                  hash_string = (
-                        f"{KEY}|"
-                        f"{fields['txnid']}|"
-                        f"{fields['amount']}|"
-                        f"{fields['productinfo']}|"
-                        f"{fields['firstname']}|"
-                        f"{fields['email']}|"
-                        f"{fields.get('udf1', '')}|"
-                        f"{fields.get('udf2', '')}|"
-                        f"{fields.get('udf3', '')}|"
-                        f"{fields.get('udf4', '')}|"
-                        f"{fields.get('udf5', '')}||||||"
-                        # f"{fields['si_details']}|"
-                        f"{SALT}"
-                  )
-
+                  hash_string += f"{fields['si_details']}|"
+            hash_string += SALT
             return hashlib.sha512(hash_string.encode()).hexdigest()
       
       def generate_hash_self(self, fields):
             try:
-                
                 hash = self.generate_hash(fields, self.MERCHANT_KEY, self.SALT)
                 fields_with_hash = deepcopy(fields)
                 fields_with_hash['hash'] = hash
@@ -108,7 +89,7 @@ class payu_subscription(payu_manager):
       
       @staticmethod
       def create_subscription_date( days  = 365 * 30 ):
-            start_date = datetime.today()+timedelta(days=1)
+            start_date = datetime.today()
             end_date = start_date + timedelta(days=days)
             return {
                   "paymentStartDate": start_date.strftime("%Y-%m-%d"),
@@ -128,7 +109,6 @@ class payu_subscription(payu_manager):
             return fields_with_hash
       
 
-
 class payu_test_man( payu_subscription ):
       def __init__( self, *args, **kargs ):
             kargs.setdefault( "PAYU_URL", PAYU_TEST_URL )
@@ -147,7 +127,7 @@ def get_test_data_json():
             "email": "raju@localhost.localhost",
             "phone": "0000000000",
             "api_version": "7",
-            "si": "1",
+            "si": 1,
       }
       return fields
       
