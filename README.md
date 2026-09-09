@@ -13,6 +13,7 @@ payu-pyapi is a Python library that simplifies integration with PayU's payment g
 - Subscription date management
 - Support for both test and production environments
 
+
 ## Purpose
 
 This library aims to:
@@ -21,6 +22,7 @@ This library aims to:
 - **Subscription Management**: Handle recurring billing setup with ease
 - **Security**: Automate SHA512 hash generation for secure payment processing
 - **Flexibility**: Support custom billing cycles, currencies, and subscription durations
+<img width="1536" height="1024" alt="PayU Payment Flow Sequence Diagram(1)" src="https://github.com/user-attachments/assets/87cc738f-0552-4d4b-9ba4-265a574a50d4" />
 
 ## Use Cases
 
